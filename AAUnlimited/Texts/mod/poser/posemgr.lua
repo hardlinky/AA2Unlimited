@@ -972,21 +972,30 @@ _M.interpolateScene = function(scene)
 			
 			log.spam("interpolateScene: original camera eu: [%s, %s, %s]", camera.rotx, camera.roty, camera.rotz);
 			log.spam("interpolateScene:   target camera eu: [%s, %s, %s]", scene.camera.rotx, scene.camera.roty, scene.camera.rotz);
-			local oldX, oldY, oldZ, oldW = charamgr.current:euler2quat({ camera.rotx, camera.roty, camera.rotz })
-			log.spam("interpolateScene: camera old qu: [%s, %s, %s, %s]", oldX, oldY, oldZ, oldW);
-			local newX, newY, newZ, newW = charamgr.current:euler2quat({ scene.camera.rotx, scene.camera.roty, scene.camera.rotz })
-			log.spam("interpolateScene: camera new qu: [%s, %s, %s, %s]", newX, newY, newZ, newW);
-			local outqX, outqY, outqZ, outqW = charamgr.current:quatslerp(
-				{ oldX, oldY, oldZ, oldW },
-				{ newX, newY, newZ, newW },
-				interpolationValue);
-			log.spam("interpolateScene: camera in: [%s, %s, %s, %s]", outqX, outqY, outqZ, outqW);
-			local qx, qy, qz = charamgr.current:quat2euler({outqX, outqY, outqZ, outqW});
-			camera.rotx = qx
-			camera.roty = qy
-			camera.rotz = qz
 			
-			log.spam("interpolateScene: result euler camera: [%s, %s, %s]", qx, qy, qz);
+			local diff = scene.camera.roty - camera.roty
+			if (diff > math.pi ) then
+				diff = diff - (math.pi * 2)
+			elseif(diff < (math.pi * -1)) then
+				diff = diff + (math.pi * 2)
+			end
+			camera.roty = camera.roty + diff * interpolationValue	
+			
+			diff = scene.camera.rotx - camera.rotx
+			if (diff > math.pi ) then
+				diff = diff - (math.pi * 2)
+			elseif(diff < (math.pi * -1)) then
+				diff = diff + (math.pi * 2)
+			end
+			camera.rotx = camera.rotx + diff * interpolationValue;
+			
+			diff = camera.rotz - scene.camera.rotz
+			if (diff > math.pi ) then
+				diff = diff - (math.pi * 2)
+			elseif(diff < (math.pi * -1)) then
+				diff = diff + (math.pi * 2)
+			end
+			camera.rotz = camera.rotz + diff * interpolationValue
 
 			camera.shiftx = camera.shiftx + (scene.camera.shiftx - camera.shiftx) * interpolationValue
 			camera.shifty = camera.shifty + (scene.camera.shifty - camera.shifty) * interpolationValue
