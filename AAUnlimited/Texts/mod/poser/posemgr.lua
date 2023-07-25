@@ -968,8 +968,7 @@ _M.interpolateScene = function(scene)
 			end
 		end
 		
-		if not get_setting("lock_camera") then
-			
+		if not get_setting("lock_camera") then			
 			log.spam("interpolateScene: original camera eu: [%s, %s, %s]", camera.rotx, camera.roty, camera.rotz);
 			log.spam("interpolateScene:   target camera eu: [%s, %s, %s]", scene.camera.rotx, scene.camera.roty, scene.camera.rotz);
 			
@@ -987,9 +986,9 @@ _M.interpolateScene = function(scene)
 			elseif(diff < (math.pi * -1)) then
 				diff = diff + (math.pi * 2)
 			end
-			camera.rotx = camera.rotx + diff * interpolationValue;
+			camera.rotx = camera.rotx + diff * interpolationValue
 			
-			diff = camera.rotz - scene.camera.rotz
+			diff = scene.camera.rotz - camera.rotz
 			if (diff > math.pi ) then
 				diff = diff - (math.pi * 2)
 			elseif(diff < (math.pi * -1)) then
